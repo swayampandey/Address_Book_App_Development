@@ -4,6 +4,7 @@ import com.bridgelabz.addressbookapp.dto.AddressBookDTO;
 import com.bridgelabz.addressbookapp.exception.AddressBookException;
 import com.bridgelabz.addressbookapp.model.AddressBookData;
 import com.bridgelabz.addressbookapp.repository.AddressBookRepository;
+import com.bridgelabz.addressbookapp.util.AddressBookToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,9 @@ public class AddressBookService implements IAddressBookService {
 
     @Autowired
     private AddressBookRepository addressBookRepository;
+
+    @Autowired
+    AddressBookToken addressBookToken;
 
     @Override
     public AddressBookData createAddressBookContactData(AddressBookDTO addressBookDTO) {
@@ -41,7 +45,7 @@ public class AddressBookService implements IAddressBookService {
     public AddressBookData updateAddressBookContactData(Long id, AddressBookDTO addressBookDTO) {
         AddressBookData contactData = addressBookRepository.findById(id).orElseThrow(() -> new AddressBookException("Id not exist"));
         contactData.updateContactInfo(addressBookDTO);
-        return contactData;
+        return addressBookRepository.save(contactData);
     }
 
     @Override
